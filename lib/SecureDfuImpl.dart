@@ -1,5 +1,9 @@
 
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import 'package:modern_dfu/utils.dart';
 
 import 'constants.dart';
 
@@ -38,6 +42,38 @@ class SecureDfuImpl {
 
     final ObjectInfo info = await selectObject(OBJECT_COMMAND);
 
+    debugPrint("Command object info received (Max size = ${info.maxSize}, Offset = ${info.offset}, CRC = ${info.CRC32})");
+
+    File mInitPacketStream = File('sample_file');
+    Uint8List initContent = mInitPacketStream.readAsBytesSync();
+
+    List<int> buffer = initContent.sublist(0, info.offset);
+
+    // Calculate the CRC32
+    //final int crc = CRC32.compute(buffer);
+
+    setPacketReceiptNotifications(0);
+    debugPrint("Packet Receipt Notif disabled (Op Code = 2, Value = 0)");
+
+    // Create the Init object
+    debugPrint("Creating Init packet object (Op Code = 1, Type = 1, Size = ${initContent.length})");
+    writeCreateRequest(OBJECT_COMMAND, initContent.length);
+    debugPrint("Command object created");
+
+    while (initContent.length > 0) {
+      writeInitData(mPacketCharacteristic, crc32);
+
+      int crc = (int) (crc32.getValue() & 0xFFFFFFFFL);
+
+      // Calculate Checksum
+      debugPrint("Sending Calculate Checksum command (Op Code = 3)");
+      checksum = readChecksum();
+      debugPrint("Checksum received (Offset = %d, CRC = %08X)", checksum.offset, checksum.CRC32);
+    }
+
+    logi("Executing init packet (Op Code = 4)");
+    writeExecute();
+
     return 0;
   }
 
@@ -47,13 +83,18 @@ class SecureDfuImpl {
     opCode[1] = type;
     writeOpCode(mControlPointCharacteristic, opCode);
 
-    List<int> response = await readNotificationResponse();
+    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
     int status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
 
+    if (status == EXTENDED_ERROR)
+      throw new Exception("Selecting object failed ${response}");
+    if (status != DFU_STATUS_SUCCESS)
+      throw new Exception("Selecting object failed ${status}");
+
     final ObjectInfo info = new ObjectInfo();
-    info.maxSize = unsignedBytesToInt(response, 3);
-    info.offset = unsignedBytesToInt(response, 3 + 4);
-    info.CRC32  = unsignedBytesToInt(response, 3 + 8);
+    info.maxSize = unsignedBytesToInt(response!, 3);
+    info.offset = unsignedBytesToInt(response!, 3 + 4);
+    info.CRC32  = unsignedBytesToInt(response!, 3 + 8);
     return info;
   }
 
@@ -61,11 +102,11 @@ class SecureDfuImpl {
     char.writeData(opCode);
   }
 
-  Future<List<int>> readNotificationResponse(UserCharacteristic char, List<int> opCode) async {
+  Future<List<int>?> readNotificationResponse(UserCharacteristic char) async {
     await char.getResponse(1000);
   }
 
-  int getStatusCode(List<int> response, int request) {
+  int getStatusCode(List<int>? response, int request) {
     if (response == null || response.length < 3 || response[0] != OP_CODE_RESPONSE_CODE_KEY || response[1] != request ||
         (response[2] != DFU_STATUS_SUCCESS &&
             response[2] != OP_CODE_NOT_SUPPORTED &&
@@ -79,6 +120,23 @@ class SecureDfuImpl {
       throw new Exception("Invalid response received, ${response} ${request}");
     return response[2];
   }
+
+  Future<void> setPacketReceiptNotifications(final int number) async {
+
+    // Send the number of packets of firmware before receiving a receipt notification
+    debugPrint("Sending the number of packets before notifications (Op Code = 2, Value = ${number}");
+    setNumberOfPackets(OP_CODE_PACKET_RECEIPT_NOTIF_REQ, number);
+    writeOpCode(mControlPointCharacteristic, OP_CODE_PACKET_RECEIPT_NOTIF_REQ);
+
+    // Read response
+    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check
+    final int status = getStatusCode(response, OP_CODE_PACKET_RECEIPT_NOTIF_REQ_KEY);
+    if (status == EXTENDED_ERROR)
+      throw new Exception("Sending the number of packets failed ${response}");
+    if (status != DFU_STATUS_SUCCESS)
+      throw new Exception("Sending the number of packets failed ${status}");
+  }
+
 }
 
 ///////////////////////////////////////////////////////////
