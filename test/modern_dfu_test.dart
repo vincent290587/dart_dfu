@@ -5,8 +5,10 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:modern_dfu/SecureDfuImpl.dart';
+import 'package:modern_dfu/constants.dart';
 
 import 'package:modern_dfu/modern_dfu.dart';
+import 'package:modern_dfu/utils.dart';
 
 class FakeCharacteristic implements UserCharacteristic {
 
@@ -20,14 +22,25 @@ class FakeCharacteristic implements UserCharacteristic {
 
     debugPrint("Writing ${data} to ${name} char.");
 
-    await Future.delayed(Duration(milliseconds: 400));
+    await Future.delayed(Duration(milliseconds: 50));
 
-    List<int> rsp = [ 0, 0, 0, 0, 0];
-    controller.add(rsp);
+    if (data.length == 0) {
+      debugPrint("!! Zero length data !!");
+    } else if (data.length == 2 && data[0] == 6) {
+
+      List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      controller.add(rsp);
+    } else {
+
+      List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      controller.add(rsp);
+    }
+
   }
 
   @override
   Future<List<int>> getResponse(int timeout_ms) {
+    controller.stream.drain();
     return controller.stream.first;
   }
 
@@ -38,7 +51,21 @@ class FakeCharacteristic implements UserCharacteristic {
 }
 
 void main() {
-  test('adds one to input values', () async {
+  test('utils', () async {
+    List<int> array = [10, 0, 0, 0];
+    expect(unsignedBytesToInt(array, 0), 10);
+  });
+  test('ObjectInfo', () async {
+    List<int> array = [0x60, 0x06, 0x01, 0, 0x02, 0, 0, 0, 0x03, 0, 0, 0, 0, 0, 0, 0];
+    final ObjectInfo info = new ObjectInfo();
+    info.maxSize = unsignedBytesToInt(array, 3);
+    info.offset = unsignedBytesToInt(array, 3 + 4);
+    info.CRC32  = unsignedBytesToInt(array, 3 + 8);
+
+    expect(info.maxSize, 512);
+    expect(info.offset, 768);
+  });
+  test('Full DFU', () async {
 
     final FakeCharacteristic controlChar = FakeCharacteristic('controlChar');
     final FakeCharacteristic packetChar = FakeCharacteristic('packetChar');
@@ -49,7 +76,7 @@ void main() {
     );
 
     Uint8List initContent = Uint8List.fromList([ 1, 2, 3, 4, 5, 6]);
-    Uint8List fwContent = Uint8List.fromList([ 1, 2, 3, 4, 5, 6]);
+    Uint8List fwContent = Uint8List.fromList(List<int>.filled(44*1024, 255));
 
     await dfuImpl.startDfu(initContent, fwContent);
 

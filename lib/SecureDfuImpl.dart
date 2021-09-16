@@ -52,12 +52,12 @@ class SecureDfuImpl {
     await setPacketReceiptNotifications(0);
     debugPrint("Packet Receipt Notif disabled (Op Code = 2, Value = 0)");
 
-    List<int> buffer = initContent.sublist(0, info.maxSize); // TODO check
+    List<int> buffer = List<int>.from(initContent); // TODO check
 
     // Calculate the CRC32
-    final int crc = CRC32.compute(initContent);
+    // final int crc = CRC32.compute(initContent);
 
-    await writeData(mPacketCharacteristic, buffer, crc);
+    await writeData(mPacketCharacteristic, buffer, 0);
 
     // Calculate Checksum
     debugPrint("Sending Calculate Checksum command (Op Code = 3)");
@@ -74,7 +74,7 @@ class SecureDfuImpl {
 
     // notif every 12 packets
     int notifs = 12;
-    setPacketReceiptNotifications(notifs);
+    await setPacketReceiptNotifications(notifs);
     debugPrint("Packet Receipt Notif Req (Op Code = 2) sent (Value = ${notifs})");
 
     debugPrint("Setting object to Data (Op Code = 6, Type = 2)");
@@ -85,13 +85,18 @@ class SecureDfuImpl {
     final int chunkCount = ((firmwareFile.length + info.maxSize - 1).toDouble() / info.maxSize).toInt();
     int currentChunk = 0;
 
-    List<int> totBuffer = List.from(firmwareFile);
+    List<int> totBuffer = List<int>.from(firmwareFile);
 
     while (totBuffer.length > 0) {
 
       await Future.delayed(Duration(milliseconds: 400));
 
-      List<int> buffer = totBuffer.sublist(0, info.maxSize);
+      List<int> buffer = [];
+      if (totBuffer.length >= info.maxSize) {
+        buffer = totBuffer.sublist(0, info.maxSize);
+      } else {
+        buffer = totBuffer;
+      }
 
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
@@ -112,10 +117,15 @@ class SecureDfuImpl {
       debugPrint("Executing FW packet (Op Code = 4)");
       await writeExecute();
 
-      totBuffer.sublist(info.maxSize);
+      if (totBuffer.length >= info.maxSize) {
+        totBuffer = totBuffer.sublist(info.maxSize);
+      } else {
+        totBuffer = [];
+      }
+      currentChunk++;
     }
 
-    await writeExecute();
+    //await writeExecute();
 
     return 0;
   }
