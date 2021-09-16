@@ -7,10 +7,17 @@ int unsignedBytesToInt(List<int> array, int offset) {
       + ((array[offset + 2] & 0xFF) << 16) + ((array[offset + 3] & 0xFF) << 24);
 }
 
-void setNumberOfPackets(final List<int> data, final int value) {
+void setNumberOfPackets(List<int> data, int value) {
   // TODO check
   data[1] = (value & 0xFF);
   data[2] = ((value >> 8) & 0xFF);
+}
+
+void setObjectSize(List<int> data, int value) {
+  data[2] = (value & 0xFF);
+  data[3] = ((value >> 8) & 0xFF);
+  data[4] = ((value >> 16) & 0xFF);
+  data[5] = ((value >> 24) & 0xFF);
 }
 
 /// Computes Cyclic Redundancy Check values.
