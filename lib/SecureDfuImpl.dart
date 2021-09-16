@@ -27,17 +27,11 @@ class SecureDfuImpl {
 
   SecureDfuImpl({required this.mPacketCharacteristic, required this.mControlPointCharacteristic});
 
-  Future<int> startDfu() async {
+  Future<int> startDfu(Uint8List initContent, Uint8List fwContent) async {
 
     int ret;
 
-    File mInitPacketStream = File('data/bin');
-    Uint8List initContent = mInitPacketStream.readAsBytesSync();
-
     ret = await sendInitPacket(initContent);
-
-    File mFirmwareStream = File('firmware');
-    Uint8List fwContent = mFirmwareStream.readAsBytesSync();
 
     ret = await sendFirmware(fwContent);
 
@@ -91,28 +85,35 @@ class SecureDfuImpl {
     final int chunkCount = ((firmwareFile.length + info.maxSize - 1).toDouble() / info.maxSize).toInt();
     int currentChunk = 0;
 
-    List<int> buffer = firmwareFile.sublist(0, info.offset);
+    List<int> totBuffer = List.from(firmwareFile);
 
-    //
+    while (totBuffer.length > 0) {
 
-    await Future.delayed(Duration(milliseconds: 400));
+      await Future.delayed(Duration(milliseconds: 400));
 
-    debugPrint("Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk + 1}/${chunkCount})");
-    writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes);
-    debugPrint("Data object (${currentChunk + 1}/${chunkCount}) created");
+      List<int> buffer = totBuffer.sublist(0, info.maxSize);
 
-    debugPrint("Uploading firmware...");
-    await writeData(mPacketCharacteristic, buffer, 0);
+      debugPrint(
+          "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
+              1}/${chunkCount})");
+      writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes);
+      debugPrint("Data object (${currentChunk + 1}/${chunkCount}) created");
 
-    // Calculate Checksum
-    debugPrint("Sending Calculate Checksum command (Op Code = 3)");
-    ObjectChecksum checksum = await readChecksum();
-    debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
+      debugPrint("Uploading firmware...");
+      await writeData(mPacketCharacteristic, buffer, 0);
 
-    debugPrint("Executing FW packet (Op Code = 4)");
-    await writeExecute();
+      // Calculate Checksum
+      debugPrint("Sending Calculate Checksum command (Op Code = 3)");
+      ObjectChecksum checksum = await readChecksum();
+      debugPrint(
+          "Checksum received (Offset = ${checksum.offset}, CRC = ${checksum
+              .CRC32})");
 
-    //
+      debugPrint("Executing FW packet (Op Code = 4)");
+      await writeExecute();
+
+      totBuffer.sublist(info.maxSize);
+    }
 
     await writeExecute();
 
@@ -125,7 +126,7 @@ class SecureDfuImpl {
     opCode[1] = type;
     writeOpCode(mControlPointCharacteristic, opCode);
 
-    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
+    List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
     int status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
 
     if (status == EXTENDED_ERROR)
@@ -134,9 +135,9 @@ class SecureDfuImpl {
       throw new Exception("Selecting object failed ${status}");
 
     final ObjectInfo info = new ObjectInfo();
-    info.maxSize = unsignedBytesToInt(response!, 3);
-    info.offset = unsignedBytesToInt(response!, 3 + 4);
-    info.CRC32  = unsignedBytesToInt(response!, 3 + 8);
+    info.maxSize = unsignedBytesToInt(response, 3);
+    info.offset = unsignedBytesToInt(response, 3 + 4);
+    info.CRC32  = unsignedBytesToInt(response, 3 + 8);
     return info;
   }
 
@@ -144,8 +145,9 @@ class SecureDfuImpl {
     await char.writeData(opCode);
   }
 
-  Future<List<int>?> readNotificationResponse(UserCharacteristic char) async {
-    await char.getResponse(1000);
+  Future<List<int>> readNotificationResponse(UserCharacteristic char) async {
+    List<int> rsp = await char.getResponse(1000);
+    return rsp;
   }
 
   Future<void> writeExecute() async {
@@ -182,7 +184,7 @@ class SecureDfuImpl {
 
     writeOpCode(mControlPointCharacteristic, OP_CODE_CALCULATE_CHECKSUM);
 
-    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
+    List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
     final int status = getStatusCode(response, OP_CODE_CALCULATE_CHECKSUM_KEY);
     if (status == EXTENDED_ERROR)
       throw new Exception("Creating Command object failed ${response}");
@@ -190,12 +192,12 @@ class SecureDfuImpl {
       throw new Exception("Creating Command object failed ${status}");
 
     final ObjectChecksum checksum = new ObjectChecksum();
-    checksum.offset = unsignedBytesToInt(response!, 3);
-    checksum.CRC32  = unsignedBytesToInt(response!, 3 + 4);
+    checksum.offset = unsignedBytesToInt(response, 3);
+    checksum.CRC32  = unsignedBytesToInt(response, 3 + 4);
     return checksum;
   }
 
-  int getStatusCode(List<int>? response, int request) {
+  int getStatusCode(List<int> response, int request) {
     if (response == null || response.length < 3 || response[0] != OP_CODE_RESPONSE_CODE_KEY || response[1] != request ||
         (response[2] != DFU_STATUS_SUCCESS &&
         response[2] != OP_CODE_NOT_SUPPORTED &&
@@ -219,7 +221,7 @@ class SecureDfuImpl {
     writeOpCode(mControlPointCharacteristic, data);
 
     // Read response
-    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check
+    List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check
     final int status = getStatusCode(response, OP_CODE_PACKET_RECEIPT_NOTIF_REQ_KEY);
     if (status == EXTENDED_ERROR)
       throw new Exception("Sending the number of packets failed ${response}");

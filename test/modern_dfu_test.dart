@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +17,13 @@ class FakeCharacteristic implements UserCharacteristic {
 
   @override
   Future<void> writeData(List<int> data) async {
+
     debugPrint("Writing ${data} to ${name} char.");
+
+    await Future.delayed(Duration(milliseconds: 400));
+
+    List<int> rsp = [ 0, 0, 0, 0, 0];
+    controller.add(rsp);
   }
 
   @override
@@ -40,7 +48,10 @@ void main() {
       mPacketCharacteristic: packetChar,
     );
 
-    await dfuImpl.startDfu();
+    Uint8List initContent = Uint8List.fromList([ 1, 2, 3, 4, 5, 6]);
+    Uint8List fwContent = Uint8List.fromList([ 1, 2, 3, 4, 5, 6]);
+
+    await dfuImpl.startDfu(initContent, fwContent);
 
     final calculator = Calculator();
     expect(calculator.addOne(2), 3);
