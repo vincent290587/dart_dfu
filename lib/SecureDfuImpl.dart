@@ -40,7 +40,7 @@ class SecureDfuImpl {
   Future<int> sendInitPacket(Uint8List initContent) async {
 
     debugPrint("Setting object to Command (Op Code = 6, Type = 1)");
-    ObjectResponse status = await selectObject(OBJECT_COMMAND);
+    ObjectResponse status = await retryBlock(3, selectObject(OBJECT_COMMAND));
     if (status.success == false) {
       return 1;
     }
@@ -49,13 +49,13 @@ class SecureDfuImpl {
 
     // Create the Init object
     debugPrint("Creating Init packet object (Op Code = 1, Type = 1, Size = ${initContent.length})");
-    status = await writeCreateRequest(OBJECT_COMMAND, initContent.length);
+    status = await retryBlock(3, writeCreateRequest(OBJECT_COMMAND, initContent.length));
     if (status.success == false) {
       return 2;
     }
     debugPrint("Command object created");
 
-    status = await setPacketReceiptNotifications(0);
+    status = await retryBlock(3, setPacketReceiptNotifications(0));
     if (status.success == false) {
       return 3;
     }
@@ -67,7 +67,7 @@ class SecureDfuImpl {
 
     // Calculate Checksum
     debugPrint("Sending Calculate Checksum command (Op Code = 3)");
-    status = await readChecksum();
+    status = await retryBlock(3, readChecksum());
     if (status.success == false) {
       return 4;
     }
@@ -75,7 +75,7 @@ class SecureDfuImpl {
     debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
     debugPrint("Executing init packet (Op Code = 4)");
-    status = await writeExecute();
+    status = await retryBlock(3, writeExecute());
     if (status.success == false) {
       return 5;
     }
@@ -87,14 +87,14 @@ class SecureDfuImpl {
 
     // notif every 12 packets
     int notifs = 12;
-    ObjectResponse status = await setPacketReceiptNotifications(notifs);
+    ObjectResponse status = await retryBlock(3, setPacketReceiptNotifications(notifs));
     if (status.success == false) {
       return 1;
     }
     debugPrint("Packet Receipt Notif Req (Op Code = 2) sent (Value = ${notifs})");
 
     debugPrint("Setting object to Data (Op Code = 6, Type = 2)");
-    status = await selectObject(OBJECT_DATA);
+    status = await retryBlock(3, selectObject(OBJECT_DATA));
     if (status.success == false) {
       return 2;
     }
@@ -121,7 +121,7 @@ class SecureDfuImpl {
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
               1}/${chunkCount})");
-      status = await writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes);
+      status = await retryBlock(3, writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes));
       if (status.success == false) {
         return 3;
       }
@@ -132,7 +132,7 @@ class SecureDfuImpl {
 
       // Calculate Checksum
       debugPrint("Sending Calculate Checksum command (Op Code = 3)");
-      status = await readChecksum();
+      status = await retryBlock(3, readChecksum());
       if (status.success == false) {
         return 4;
       }
@@ -140,7 +140,7 @@ class SecureDfuImpl {
       debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
       debugPrint("Executing FW packet (Op Code = 4)");
-      status = await writeExecute();
+      status = await retryBlock(3, writeExecute());
       if (status.success == false) {
         return 5;
       }

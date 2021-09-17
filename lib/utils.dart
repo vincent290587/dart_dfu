@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'SecureDfuImpl.dart';
+
 int unsignedBytesToInt(List<int> array, int offset) {
   // TODO check
   return (array[offset] & 0xFF) + ((array[offset + 1] & 0xFF) << 8)
@@ -18,6 +20,17 @@ void setObjectSize(List<int> data, int value) {
   data[3] = ((value >> 8) & 0xFF);
   data[4] = ((value >> 16) & 0xFF);
   data[5] = ((value >> 24) & 0xFF);
+}
+
+Future<ObjectResponse> retryBlock(final int retries, Future<ObjectResponse> func) async {
+
+  for (int i=0; i< retries; i++) {
+    ObjectResponse resp = await func;
+    if (resp.success) {
+      return resp;
+    }
+  }
+  return ObjectResponse(null, success: false);
 }
 
 /// Computes Cyclic Redundancy Check values.
