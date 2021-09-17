@@ -1,5 +1,4 @@
 
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,6 @@ abstract class UserCharacteristic {
 
   Future<List<int>> getResponse(int timeout_ms);
 
-  //Stream<List<int>> getStream();
 }
 
 ///////////////////////////////////////////////////////////
@@ -41,31 +39,45 @@ class SecureDfuImpl {
   Future<int> sendInitPacket(Uint8List initContent) async {
 
     debugPrint("Setting object to Command (Op Code = 6, Type = 1)");
-    final ObjectInfo info = await selectObject(OBJECT_COMMAND);
+    ObjectResponse status = await selectObject(OBJECT_COMMAND);
+    if (status.success == false) {
+      return 1;
+    }
+    final ObjectInfo info = status.payload;
     debugPrint("Command object info received (Max size = ${info.maxSize}, Offset = ${info.offset}, CRC = ${info.CRC32})");
 
     // Create the Init object
     debugPrint("Creating Init packet object (Op Code = 1, Type = 1, Size = ${initContent.length})");
-    await writeCreateRequest(OBJECT_COMMAND, initContent.length);
+    status = await writeCreateRequest(OBJECT_COMMAND, initContent.length);
+    if (status.success == false) {
+      return 2;
+    }
     debugPrint("Command object created");
 
-    await setPacketReceiptNotifications(0);
+    status = await setPacketReceiptNotifications(0);
+    if (status.success == false) {
+      return 3;
+    }
     debugPrint("Packet Receipt Notif disabled (Op Code = 2, Value = 0)");
 
     List<int> buffer = List<int>.from(initContent); // TODO check
-
-    // Calculate the CRC32
-    // final int crc = CRC32.compute(initContent);
 
     await writeData(mPacketCharacteristic, buffer, 0);
 
     // Calculate Checksum
     debugPrint("Sending Calculate Checksum command (Op Code = 3)");
-    ObjectChecksum checksum = await readChecksum();
+    status = await readChecksum();
+    if (status.success == false) {
+      return 4;
+    }
+    ObjectChecksum checksum = status.payload;
     debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
     debugPrint("Executing init packet (Op Code = 4)");
-    await writeExecute();
+    status = await writeExecute();
+    if (status.success == false) {
+      return 5;
+    }
 
     return 0;
   }
@@ -74,11 +86,18 @@ class SecureDfuImpl {
 
     // notif every 12 packets
     int notifs = 12;
-    await setPacketReceiptNotifications(notifs);
+    ObjectResponse status = await setPacketReceiptNotifications(notifs);
+    if (status.success == false) {
+      return 1;
+    }
     debugPrint("Packet Receipt Notif Req (Op Code = 2) sent (Value = ${notifs})");
 
     debugPrint("Setting object to Data (Op Code = 6, Type = 2)");
-    ObjectInfo info = await selectObject(OBJECT_DATA);
+    status = await selectObject(OBJECT_DATA);
+    if (status.success == false) {
+      return 2;
+    }
+    ObjectInfo info = status.payload;
     debugPrint("Command object info received (Max size = ${info.maxSize}, Offset = ${info.offset}, CRC = ${info.CRC32})");
 
     int availableObjectSizeInBytes = info.maxSize;
@@ -101,7 +120,10 @@ class SecureDfuImpl {
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
               1}/${chunkCount})");
-      writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes);
+      status = await writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes);
+      if (status.success == false) {
+        return 3;
+      }
       debugPrint("Data object (${currentChunk + 1}/${chunkCount}) created");
 
       debugPrint("Uploading firmware...");
@@ -109,13 +131,18 @@ class SecureDfuImpl {
 
       // Calculate Checksum
       debugPrint("Sending Calculate Checksum command (Op Code = 3)");
-      ObjectChecksum checksum = await readChecksum();
-      debugPrint(
-          "Checksum received (Offset = ${checksum.offset}, CRC = ${checksum
-              .CRC32})");
+      status = await readChecksum();
+      if (status.success == false) {
+        return 4;
+      }
+      ObjectChecksum checksum = status.payload;
+      debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
       debugPrint("Executing FW packet (Op Code = 4)");
-      await writeExecute();
+      status = await writeExecute();
+      if (status.success == false) {
+        return 5;
+      }
 
       if (totBuffer.length >= info.maxSize) {
         totBuffer = totBuffer.sublist(info.maxSize);
@@ -130,84 +157,118 @@ class SecureDfuImpl {
     return 0;
   }
 
-  Future<ObjectInfo> selectObject(int type) async {
+  Future<ObjectResponse> selectObject(int type) async {
 
     List<int> opCode = OP_CODE_SELECT_OBJECT;
     opCode[1] = type;
     writeOpCode(mControlPointCharacteristic, opCode);
 
     List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
-    int status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
-
-    if (status == EXTENDED_ERROR)
-      throw new Exception("Selecting object failed ${response}");
-    if (status != DFU_STATUS_SUCCESS)
-      throw new Exception("Selecting object failed ${status}");
+    final ObjectResponse status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
+    if (status.success == false) {
+      debugPrint("getStatusCode failed");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload == EXTENDED_ERROR) {
+      debugPrint("Sending the number of packets failed ${response}");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload != DFU_STATUS_SUCCESS) {
+      debugPrint("Sending the number of packets failed ${status}");
+      return ObjectResponse(null, success: false);
+    }
 
     final ObjectInfo info = new ObjectInfo();
     info.maxSize = unsignedBytesToInt(response, 3);
     info.offset = unsignedBytesToInt(response, 3 + 4);
     info.CRC32  = unsignedBytesToInt(response, 3 + 8);
-    return info;
+    return ObjectResponse(info, success: true);
   }
 
-  Future<void> writeOpCode(UserCharacteristic char, List<int> opCode) async {
-    await char.writeData(opCode);
+  Future<void> writeOpCode(UserCharacteristic char, List<int> opCode) {
+    return char.writeData(opCode);
   }
 
-  Future<List<int>> readNotificationResponse(UserCharacteristic char) async {
-    List<int> rsp = await char.getResponse(1000);
-    return rsp;
+  Future<List<int>> readNotificationResponse(UserCharacteristic char) {
+    return char.getResponse(1000);
   }
 
-  Future<void> writeExecute() async {
+  Future<ObjectResponse> writeExecute() async {
 
     writeOpCode(mControlPointCharacteristic, OP_CODE_EXECUTE);
 
-    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
-    final int status = getStatusCode(response, OP_CODE_EXECUTE_KEY);
-    if (status == EXTENDED_ERROR)
-      throw new Exception("Executing object failed ${response}");
-    if (status != DFU_STATUS_SUCCESS)
-      throw new Exception("Executing object failed ${status}");
+    List<int>? response = await readNotificationResponse(mControlPointCharacteristic);
+    final ObjectResponse status = getStatusCode(response, OP_CODE_EXECUTE_KEY);
+    if (status.success == false) {
+      debugPrint("getStatusCode failed");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload == EXTENDED_ERROR) {
+      debugPrint("Sending the number of packets failed ${response}");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload != DFU_STATUS_SUCCESS) {
+      debugPrint("Sending the number of packets failed ${status}");
+      return ObjectResponse(null, success: false);
+    }
+
+    return ObjectResponse(null, success: true);
   }
 
-  Future<void>  writeCreateRequest(final int type, final int size) async {
+  Future<ObjectResponse> writeCreateRequest(final int type, final int size) async {
 
     List<int> data = (type == OBJECT_COMMAND) ? OP_CODE_CREATE_COMMAND : OP_CODE_CREATE_DATA;
     setObjectSize(data, size);
     writeOpCode(mControlPointCharacteristic, data);
 
-    List<int>? response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
-    final int status = getStatusCode(response, OP_CODE_CREATE_KEY);
-    if (status == EXTENDED_ERROR)
-      throw new Exception("Creating Command object failed ${response}");
-    if (status != DFU_STATUS_SUCCESS)
-      throw new Exception("Creating Command object failed ${status}");
+    List<int>? response = await readNotificationResponse(mControlPointCharacteristic);
+    final ObjectResponse status = getStatusCode(response, OP_CODE_CREATE_KEY);
+    if (status.success == false) {
+      debugPrint("getStatusCode failed");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload == EXTENDED_ERROR) {
+      debugPrint("Sending the number of packets failed ${response}");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload != DFU_STATUS_SUCCESS) {
+      debugPrint("Sending the number of packets failed ${status}");
+      return ObjectResponse(null, success: false);
+    }
+
+    return ObjectResponse(null, success: true);
   }
 
-  Future<void> writeData(UserCharacteristic char, List<int> buffer, int crc32) async {
-    await char.writeData(buffer);
+  Future<void> writeData(UserCharacteristic char, List<int> buffer, int crc32) {
+    return char.writeData(buffer);
   }
 
-  Future<ObjectChecksum> readChecksum() async {
+  Future<ObjectResponse> readChecksum() async {
 
     writeOpCode(mControlPointCharacteristic, OP_CODE_CALCULATE_CHECKSUM);
 
-    List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
-    final int status = getStatusCode(response, OP_CODE_CALCULATE_CHECKSUM_KEY);
-    if (status == EXTENDED_ERROR)
-      throw new Exception("Creating Command object failed ${response}");
-    if (status != DFU_STATUS_SUCCESS)
-      throw new Exception("Creating Command object failed ${status}");
+    List<int> response = await readNotificationResponse(mControlPointCharacteristic);
+    final ObjectResponse status = getStatusCode(response, OP_CODE_CALCULATE_CHECKSUM_KEY);
+    if (status.success == false) {
+      debugPrint("getStatusCode failed");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload == EXTENDED_ERROR) {
+      debugPrint("Sending the number of packets failed ${response}");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload != DFU_STATUS_SUCCESS) {
+      debugPrint("Sending the number of packets failed ${status}");
+      return ObjectResponse(null, success: false);
+    }
 
     final ObjectChecksum checksum = new ObjectChecksum();
     checksum.offset = unsignedBytesToInt(response, 3);
     checksum.CRC32  = unsignedBytesToInt(response, 3 + 4);
-    return checksum;
+    return ObjectResponse(checksum, success: true);
   }
 
-  int getStatusCode(List<int> response, int request) {
+  ObjectResponse getStatusCode(List<int> response, int request) {
     if (response == null || response.length < 3 || response[0] != OP_CODE_RESPONSE_CODE_KEY || response[1] != request ||
         (response[2] != DFU_STATUS_SUCCESS &&
         response[2] != OP_CODE_NOT_SUPPORTED &&
@@ -217,12 +278,15 @@ class SecureDfuImpl {
         response[2] != UNSUPPORTED_TYPE &&
         response[2] != OPERATION_NOT_PERMITTED &&
         response[2] != OPERATION_FAILED &&
-        response[2] != EXTENDED_ERROR))
-      throw new Exception("Invalid response received, ${response} ${request}");
-    return response[2];
+        response[2] != EXTENDED_ERROR)) {
+
+      debugPrint("Invalid response received, ${response} ${request}");
+      return ObjectResponse(null, success: false);
+    }
+    return ObjectResponse(response[2], success: true);
   }
 
-  Future<void> setPacketReceiptNotifications(final int number) async {
+  Future<ObjectResponse> setPacketReceiptNotifications(final int number) async {
 
     // Send the number of packets of firmware before receiving a receipt notification
     List<int> data = List.from(OP_CODE_PACKET_RECEIPT_NOTIF_REQ);
@@ -232,16 +296,34 @@ class SecureDfuImpl {
 
     // Read response
     List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check
-    final int status = getStatusCode(response, OP_CODE_PACKET_RECEIPT_NOTIF_REQ_KEY);
-    if (status == EXTENDED_ERROR)
-      throw new Exception("Sending the number of packets failed ${response}");
-    if (status != DFU_STATUS_SUCCESS)
-      throw new Exception("Sending the number of packets failed ${status}");
+    final ObjectResponse status = getStatusCode(response, OP_CODE_PACKET_RECEIPT_NOTIF_REQ_KEY);
+    if (status.success == false) {
+      debugPrint("getStatusCode failed");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload == EXTENDED_ERROR) {
+      debugPrint("Sending the number of packets failed ${response}");
+      return ObjectResponse(null, success: false);
+    }
+    if (status.payload != DFU_STATUS_SUCCESS) {
+      debugPrint("Sending the number of packets failed ${status}");
+      return ObjectResponse(null, success: false);
+    }
+
+    return ObjectResponse(status, success: true);
   }
 
 }
 
 ///////////////////////////////////////////////////////////
+
+class ObjectResponse {
+
+  bool success;
+  dynamic payload;
+
+  ObjectResponse(this.payload, {required this.success});
+}
 
 class ObjectInfo extends ObjectChecksum {
   late int maxSize;

@@ -61,7 +61,7 @@ class FakeCharacteristic implements UserCharacteristic {
 }
 
 void main() {
-  test('utils', () async {
+  test('Utils', () async {
     List<int> array = [10, 0, 0, 0];
     expect(unsignedBytesToInt(array, 0), 10);
   });
