@@ -161,9 +161,9 @@ class SecureDfuImpl {
 
   Future<ObjectResponse> selectObject(int type) async {
 
-    List<int> opCode = OP_CODE_SELECT_OBJECT;
+    List<int> opCode = List.from(OP_CODE_SELECT_OBJECT);
     opCode[1] = type;
-    writeOpCode(mControlPointCharacteristic, opCode);
+    await writeOpCode(mControlPointCharacteristic, opCode);
 
     List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
     final ObjectResponse status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
