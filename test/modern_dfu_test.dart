@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:modern_dfu/SecureDfuImpl.dart';
 import 'package:modern_dfu/constants.dart';
 
-import 'package:modern_dfu/modern_dfu.dart';
 import 'package:modern_dfu/utils.dart';
 
 class FakeCharacteristic implements UserCharacteristic {

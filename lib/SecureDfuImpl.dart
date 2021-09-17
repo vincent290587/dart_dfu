@@ -1,3 +1,4 @@
+library modern_dfu;
 
 import 'dart:typed_data';
 
