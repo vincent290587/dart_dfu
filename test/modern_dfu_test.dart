@@ -86,14 +86,32 @@ class FakeCharacteristic implements UserCharacteristic {
 
 }
 
+class RetryTest {
+
+  int nbRetries = 0;
+
+  Future<ObjectResponse> getResponse() {
+    nbRetries++;
+    debugPrint("Retrying... count=$nbRetries");
+    // return Future.value(ObjectResponse(null, success: false));
+    return Future.delayed(Duration(milliseconds: 10), () => ObjectResponse(null, success: false));
+  }
+}
+
 void main() {
   test('Utils', () async {
     List<int> array = [10, 0, 0, 0];
     expect(unsignedBytesToInt(array, 0), 10);
   });
+  test('Retries', () async {
+    RetryTest rTest = RetryTest();
+    ObjectResponse resp = await retryBlock(3, () => rTest.getResponse());
+    expect(resp.success, false);
+    expect(rTest.nbRetries, 3);
+  });
   test('ObjectInfo', () async {
     List<int> array = [0x60, 0x06, 0x01, 0, 0x02, 0, 0, 0, 0x03, 0, 0, 0, 0, 0, 0, 0];
-    final ObjectInfo info = new ObjectInfo();
+    ObjectInfo info = new ObjectInfo();
     info.maxSize = unsignedBytesToInt(array, 3);
     info.offset = unsignedBytesToInt(array, 3 + 4);
     info.CRC32  = unsignedBytesToInt(array, 3 + 8);

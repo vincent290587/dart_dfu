@@ -1,16 +1,15 @@
 
-import 'dart:convert';
+import 'dart:async';
 
 import 'SecureDfuImpl.dart';
+import 'package:retry/retry.dart';
 
 int unsignedBytesToInt(List<int> array, int offset) {
-  // TODO check
   return (array[offset] & 0xFF) + ((array[offset + 1] & 0xFF) << 8)
       + ((array[offset + 2] & 0xFF) << 16) + ((array[offset + 3] & 0xFF) << 24);
 }
 
 void setNumberOfPackets(List<int> data, int value) {
-  // TODO check
   data[1] = (value & 0xFF);
   data[2] = ((value >> 8) & 0xFF);
 }
@@ -22,15 +21,27 @@ void setObjectSize(List<int> data, int value) {
   data[5] = ((value >> 24) & 0xFF);
 }
 
-Future<ObjectResponse> retryBlock(final int retries, Future<ObjectResponse> func) async {
+Future<ObjectResponse> retryBlock(final int retries, FutureOr<ObjectResponse> Function() func) async {
 
-  for (int i=0; i< retries; i++) {
-    ObjectResponse resp = await func;
-    if (resp.success) {
+  final r = RetryOptions(
+    maxAttempts: retries,
+    maxDelay: const Duration(seconds: 1),
+  );
+  final response = r.retry(
+    () async {
+      ObjectResponse resp = await func();
+      if (!resp.success) {
+        throw TimeoutException('No response');
+      }
       return resp;
-    }
-  }
-  return ObjectResponse(null, success: false);
+    },
+    // Retry on SocketException or TimeoutException
+    retryIf: (e) => e is TimeoutException,
+  ).catchError((Object e, StackTrace stackTrace) {
+    return Future.value(ObjectResponse(null, success: false));
+  });
+
+  return response;
 }
 
 /// Computes Cyclic Redundancy Check values.
