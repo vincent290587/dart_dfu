@@ -15,12 +15,22 @@ class FakeCharacteristic implements UserCharacteristic {
   final String name;
   final StreamController<List<int>> controller = new StreamController<List<int>>.broadcast();
 
+  int counter = 0;
+
   FakeCharacteristic(this.name);
 
   @override
   Future<void> writeData(List<int> data) async {
 
-    debugPrint("Writing ${data} to ${name} char.");
+    if (data.length < 10) {
+
+      debugPrint("Writing ${data} to ${name} char.");
+    } else {
+
+      debugPrint("Writing ${data.length} bytes to ${name} char.");
+    }
+
+    counter += data.length;
 
     await Future.delayed(Duration(milliseconds: 50));
 
@@ -40,7 +50,7 @@ class FakeCharacteristic implements UserCharacteristic {
 
   @override
   Future<List<int>> getResponse(int timeout_ms) {
-    controller.stream.drain();
+    //controller.stream.drain();
     return controller.stream.first;
   }
 
@@ -80,9 +90,6 @@ void main() {
 
     await dfuImpl.startDfu(initContent, fwContent);
 
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+    expect(packetChar.counter, initContent.length + fwContent.length);
   });
 }
