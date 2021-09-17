@@ -192,7 +192,7 @@ class SecureDfuImpl {
   }
 
   Future<List<int>> readNotificationResponse(UserCharacteristic char) {
-    return char.getResponse(1000);
+    return char.getResponse(8000);
   }
 
   Future<ObjectResponse> writeExecute() async {

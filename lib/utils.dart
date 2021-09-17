@@ -25,7 +25,7 @@ Future<ObjectResponse> retryBlock(final int retries, FutureOr<ObjectResponse> Fu
 
   final r = RetryOptions(
     maxAttempts: retries,
-    maxDelay: const Duration(seconds: 1),
+    maxDelay: const Duration(seconds: 4),
   );
   final response = r.retry(
     () async {
