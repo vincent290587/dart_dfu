@@ -11,12 +11,38 @@ import 'package:modern_dfu/utils.dart';
 
 class FakeCharacteristic implements UserCharacteristic {
 
+  final int MTU;
   final String name;
   final StreamController<List<int>> controller = new StreamController<List<int>>.broadcast();
 
   int counter = 0;
 
-  FakeCharacteristic(this.name);
+  FakeCharacteristic({required this.name, required this.MTU});
+
+  Future<void> _atomicWrites(List<int> data) async {
+
+    if (data.length <= MTU) {
+      counter += data.length;
+      return;
+    }
+
+    int index = 0;
+    int bytesSent = 0;
+    while (bytesSent < data.length) {
+
+      int length = MTU;
+      if (index + MTU > data.length) {
+        length = data.length - index;
+      }
+      List<int> toSend = data.sublist(index, index + length);
+      index += length;
+
+      // sending toSend
+
+      bytesSent += toSend.length;
+      counter += toSend.length;
+    }
+  }
 
   @override
   Future<void> writeData(List<int> data) async {
@@ -29,33 +55,34 @@ class FakeCharacteristic implements UserCharacteristic {
       debugPrint("Writing ${data.length} bytes to ${name} char.");
     }
 
-    counter += data.length;
+    Future.delayed(Duration(milliseconds: 50)).then((value) {
 
-    await Future.delayed(Duration(milliseconds: 50));
+      if (data.length == 0) {
+        debugPrint("!! Zero length data !!");
+      } else if (data.length == 2 && data[0] == 6) {
 
-    if (data.length == 0) {
-      debugPrint("!! Zero length data !!");
-    } else if (data.length == 2 && data[0] == 6) {
+        List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        controller.add(rsp);
+      } else {
 
-      List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      controller.add(rsp);
-    } else {
+        List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        controller.add(rsp);
+      }
+    });
 
-      List<int> rsp = [ OP_CODE_RESPONSE_CODE_KEY, data[0], DFU_STATUS_SUCCESS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      controller.add(rsp);
-    }
-
+    return _atomicWrites(data);
   }
 
   @override
   Future<List<int>> getResponse(int timeout_ms) {
     //controller.stream.drain();
-    return controller.stream.first;
+    // return controller.stream.first;
+    Future<List<int>> ret = controller.stream.first.timeout(
+      Duration(milliseconds: timeout_ms),
+      onTimeout : () => [],
+    );
+    return ret;
   }
-
-  // Stream<List<int>> getStream() {
-  //   return controller.stream;
-  // }
 
 }
 
@@ -76,8 +103,14 @@ void main() {
   });
   test('Full DFU', () async {
 
-    final FakeCharacteristic controlChar = FakeCharacteristic('controlChar');
-    final FakeCharacteristic packetChar = FakeCharacteristic('packetChar');
+    final FakeCharacteristic controlChar = FakeCharacteristic(
+      MTU: 20,
+      name: 'controlChar',
+    );
+    final FakeCharacteristic packetChar = FakeCharacteristic(
+      MTU: 20,
+      name: 'packetChar',
+    );
 
     SecureDfuImpl dfuImpl = SecureDfuImpl(
       mControlPointCharacteristic: controlChar,
