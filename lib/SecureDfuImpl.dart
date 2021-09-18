@@ -162,11 +162,11 @@ class SecureDfuImpl {
       ObjectChecksum checksum = status.payload;
       debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
-      int crc32 = CRC32.compute(totBuffer.sublist(0, checksum.offset));
+      int crc32 = CRC32.compute(firmwareFile.sublist(0, checksum.offset));
 
       if (true) { // TODO checksum.offset == curIndex && crc32 == checksum.CRC32
 
-        debugPrint("Length do match: ${checksum.offset} / ${buffer.length}");
+        debugPrint("Length do match: ${checksum.offset} / ${curIndex}");
         debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
 
         debugPrint("Executing FW packet (Op Code = 4)");
