@@ -126,17 +126,10 @@ class SecureDfuImpl {
 
     int nbRetries = 0;
     int curIndex = 0;
+    int validatedIndex = 0;
     while (totBuffer.length > 0 && nbRetries < 6) {
 
       await Future.delayed(Duration(milliseconds: 400));
-
-      List<int> buffer = [];
-      if (totBuffer.length >= info.maxSize) {
-        curIndex += info.maxSize;
-        buffer = totBuffer.sublist(0, info.maxSize);
-      } else {
-        buffer = totBuffer;
-      }
 
       if (nbRetries >= 2) {
         // desperately try smaller chunks
@@ -144,6 +137,13 @@ class SecureDfuImpl {
       }else if (nbRetries >= 4) {
         // desperately try even smaller chunks
         availableObjectSizeInBytes = info.maxSize >> 2;
+      }
+
+      List<int> buffer = [];
+      if (totBuffer.length >= availableObjectSizeInBytes) {
+        buffer = totBuffer.sublist(0, availableObjectSizeInBytes);
+      } else {
+        buffer = totBuffer;
       }
       if (buffer.length < availableObjectSizeInBytes) {
         availableObjectSizeInBytes = buffer.length;
@@ -172,25 +172,32 @@ class SecureDfuImpl {
       debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
       int crc32 = CRC32.compute(firmwareFile.sublist(0, checksum.offset));
+      curIndex = validatedIndex + buffer.length;
 
-      if (checksum.offset == curIndex && crc32 == checksum.CRC32) {
+      if ( checksum.offset == curIndex && crc32 == checksum.CRC32) {
 
         debugPrint("Length do match: ${checksum.offset} / ${curIndex}");
         debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
 
         debugPrint("Executing FW packet (Op Code = 4)");
         status = await retryBlock(3, () => writeExecute());
-        if (status.success == false) {
-          return 5;
-        }
+        if (status.success == true) {
 
-        if (totBuffer.length >= info.maxSize) {
-          totBuffer = totBuffer.sublist(info.maxSize);
+          if (totBuffer.length >= info.maxSize) {
+            totBuffer = totBuffer.sublist(info.maxSize);
+          } else {
+            totBuffer = [];
+          }
+          currentChunk++;
+          validatedIndex += buffer.length;
+          nbRetries = 0;
         } else {
-          totBuffer = [];
+
+          nbRetries++;
+          debugPrint("Execution failed");
+
+          await Future.delayed(Duration(milliseconds: 300));
         }
-        currentChunk++;
-        nbRetries = 0;
       } else {
 
         nbRetries++;
