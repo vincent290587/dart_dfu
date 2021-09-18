@@ -77,8 +77,8 @@ class SecureDfuImpl {
 
     int crc32 = CRC32.compute(buffer);
 
-    if (checksum.offset == buffer.length ||
-        crc32 != checksum.CRC32) {
+    if (checksum.offset == buffer.length &&
+        crc32 == checksum.CRC32) {
 
       debugPrint("Length do match: ${checksum.offset} / ${buffer.length}");
       debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
@@ -125,17 +125,22 @@ class SecureDfuImpl {
     List<int> totBuffer = List<int>.from(firmwareFile);
 
     int nbRetries = 0;
+    int curIndex = 0;
     while (totBuffer.length > 0 && nbRetries < 4) {
 
       await Future.delayed(Duration(milliseconds: 400));
 
       List<int> buffer = [];
       if (totBuffer.length >= info.maxSize) {
+        curIndex += info.maxSize;
         buffer = totBuffer.sublist(0, info.maxSize);
       } else {
         buffer = totBuffer;
       }
 
+      if (buffer.length < availableObjectSizeInBytes) {
+        availableObjectSizeInBytes = buffer.length;
+      }
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
               1}/${chunkCount})");
@@ -157,10 +162,9 @@ class SecureDfuImpl {
       ObjectChecksum checksum = status.payload;
       debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
-      int crc32 = CRC32.compute(buffer);
+      int crc32 = CRC32.compute(totBuffer.sublist(0, checksum.offset));
 
-      if (checksum.offset == buffer.length ||
-          crc32 != checksum.CRC32) {
+      if (true) { // TODO checksum.offset == curIndex && crc32 == checksum.CRC32
 
         debugPrint("Length do match: ${checksum.offset} / ${buffer.length}");
         debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
