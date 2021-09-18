@@ -164,7 +164,7 @@ class SecureDfuImpl {
 
       int crc32 = CRC32.compute(firmwareFile.sublist(0, checksum.offset));
 
-      if (true) { // TODO checksum.offset == curIndex && crc32 == checksum.CRC32
+      if (checksum.offset == curIndex && crc32 == checksum.CRC32) {
 
         debugPrint("Length do match: ${checksum.offset} / ${curIndex}");
         debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
