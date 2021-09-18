@@ -131,13 +131,14 @@ class SecureDfuImpl {
 
       await Future.delayed(Duration(milliseconds: 400));
 
-      if (nbRetries >= 2) {
-        // desperately try smaller chunks
-        availableObjectSizeInBytes = info.maxSize >> 1;
-      }else if (nbRetries >= 4) {
-        // desperately try even smaller chunks
-        availableObjectSizeInBytes = info.maxSize >> 2;
-      }
+      // nRF refuses that with error invalid param
+      // if (nbRetries >= 2) {
+      //   // desperately try smaller chunks
+      //   availableObjectSizeInBytes = info.maxSize >> 1;
+      // }else if (nbRetries >= 4) {
+      //   // desperately try even smaller chunks
+      //   availableObjectSizeInBytes = info.maxSize >> 2;
+      // }
 
       List<int> buffer = [];
       if (totBuffer.length >= availableObjectSizeInBytes) {
@@ -204,12 +205,12 @@ class SecureDfuImpl {
       }
     }
 
-    debugPrint("Executing data object (Op Code = 4)");
-    status = await retryBlock(5, () => writeExecute());
-    if (status.success == false) {
-      debugPrint("Execution failed");
-      return 6;
-    }
+    // debugPrint("Executing data object (Op Code = 4)");
+    // status = await retryBlock(5, () => writeExecute());
+    // if (status.success == false) {
+    //   debugPrint("Execution failed");
+    //   return 6;
+    // }
 
     return 0;
   }
