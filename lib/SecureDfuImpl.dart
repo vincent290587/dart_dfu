@@ -75,10 +75,26 @@ class SecureDfuImpl {
     ObjectChecksum checksum = status.payload;
     debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
-    debugPrint("Executing init packet (Op Code = 4)");
-    status = await retryBlock(3, () => writeExecute());
-    if (status.success == false) {
-      return 5;
+    int crc32 = CRC32.compute(buffer);
+
+    if (checksum.offset == buffer.length ||
+        crc32 != checksum.CRC32) {
+
+      debugPrint("Length do match: ${checksum.offset} / ${buffer.length}");
+      debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
+
+      debugPrint("Executing init packet (Op Code = 4)");
+      status = await retryBlock(3, () => writeExecute());
+      if (status.success == false) {
+        return 5;
+      }
+
+    } else {
+
+      debugPrint("Length DON'T match: ${checksum.offset} / ${buffer.length}");
+      debugPrint("Checksum DON'T match ${crc32} / ${checksum.CRC32}");
+      return 10;
+
     }
 
     return 0;
@@ -108,7 +124,8 @@ class SecureDfuImpl {
 
     List<int> totBuffer = List<int>.from(firmwareFile);
 
-    while (totBuffer.length > 0) {
+    int nbRetries = 0;
+    while (totBuffer.length > 0 && nbRetries < 4) {
 
       await Future.delayed(Duration(milliseconds: 400));
 
@@ -140,18 +157,33 @@ class SecureDfuImpl {
       ObjectChecksum checksum = status.payload;
       debugPrint("Checksum received (Offset = ${checksum.offset}, CRC = ${checksum.CRC32})");
 
-      debugPrint("Executing FW packet (Op Code = 4)");
-      status = await retryBlock(3, () => writeExecute());
-      if (status.success == false) {
-        return 5;
-      }
+      int crc32 = CRC32.compute(buffer);
 
-      if (totBuffer.length >= info.maxSize) {
-        totBuffer = totBuffer.sublist(info.maxSize);
+      if (checksum.offset == buffer.length ||
+          crc32 != checksum.CRC32) {
+
+        debugPrint("Length do match: ${checksum.offset} / ${buffer.length}");
+        debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
+
+        debugPrint("Executing FW packet (Op Code = 4)");
+        status = await retryBlock(3, () => writeExecute());
+        if (status.success == false) {
+          return 5;
+        }
+
+        if (totBuffer.length >= info.maxSize) {
+          totBuffer = totBuffer.sublist(info.maxSize);
+        } else {
+          totBuffer = [];
+        }
+        currentChunk++;
+        nbRetries = 0;
       } else {
-        totBuffer = [];
+
+        nbRetries++;
+        debugPrint("Length DON'T match: ${checksum.offset} / ${buffer.length}");
+        debugPrint("Checksum DON'T match ${crc32} / ${checksum.CRC32}");
       }
-      currentChunk++;
     }
 
     //await writeExecute();

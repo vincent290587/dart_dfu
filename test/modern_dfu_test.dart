@@ -102,6 +102,8 @@ void main() {
   test('Utils', () async {
     List<int> array = [10, 0, 0, 0];
     expect(unsignedBytesToInt(array, 0), 10);
+    List<int> crctest = [1,2,3,4,5,6,7,8];
+    expect(CRC32.compute(crctest), 0x3FCA88C5);
   });
   test('Retries', () async {
     RetryTest rTest = RetryTest();
