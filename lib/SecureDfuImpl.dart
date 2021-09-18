@@ -33,6 +33,8 @@ class SecureDfuImpl {
     ret = await sendInitPacket(initContent);
     if (ret != 0) return ret;
 
+    await Future.delayed(Duration(milliseconds: 200));
+
     ret = await sendFirmware(fwContent);
 
     return ret;
