@@ -126,7 +126,7 @@ class SecureDfuImpl {
 
     int nbRetries = 0;
     int curIndex = 0;
-    while (totBuffer.length > 0 && nbRetries < 4) {
+    while (totBuffer.length > 0 && nbRetries < 6) {
 
       await Future.delayed(Duration(milliseconds: 400));
 
@@ -138,6 +138,13 @@ class SecureDfuImpl {
         buffer = totBuffer;
       }
 
+      if (nbRetries >= 2) {
+        // desperately try smaller chunks
+        availableObjectSizeInBytes = info.maxSize >> 1;
+      }else if (nbRetries >= 4) {
+        // desperately try even smaller chunks
+        availableObjectSizeInBytes = info.maxSize >> 2;
+      }
       if (buffer.length < availableObjectSizeInBytes) {
         availableObjectSizeInBytes = buffer.length;
       }
@@ -149,6 +156,8 @@ class SecureDfuImpl {
         return 3;
       }
       debugPrint("Data object (${currentChunk + 1}/${chunkCount}) created");
+
+      await Future.delayed(Duration(milliseconds: 200));
 
       debugPrint("Uploading firmware...");
       await writeData(mPacketCharacteristic, buffer, 0);
@@ -185,8 +194,10 @@ class SecureDfuImpl {
       } else {
 
         nbRetries++;
-        debugPrint("Length DON'T match: ${checksum.offset} / ${buffer.length}");
+        debugPrint("Length DON'T match: ${checksum.offset} / ${curIndex}");
         debugPrint("Checksum DON'T match ${crc32} / ${checksum.CRC32}");
+
+        await Future.delayed(Duration(milliseconds: 300));
       }
     }
 
