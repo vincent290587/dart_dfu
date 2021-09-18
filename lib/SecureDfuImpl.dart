@@ -176,7 +176,7 @@ class SecureDfuImpl {
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
               1}/${chunkCount})");
-      _controllerSet('Sending chunk ${availableObjectSizeInBytes}) (${currentChunk + 1}/${chunkCount})');
+      _controllerSet('Sending chunk ${currentChunk + 1}/${chunkCount}');
       status = await retryBlock(3, () => writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes));
       if (status.success == false) {
         return 3;
