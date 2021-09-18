@@ -1,7 +1,7 @@
-name: modern_dfu
-description: Modern NordicSemi DFU
-version: 0.0.2
-homepage:
+name: dart_dfu
+description: Modern nRF DFU package
+version: 0.0.3
+homepage: https://github.com/vincent290587/dart_dfu
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

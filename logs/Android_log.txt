@@ -1,0 +1,429 @@
+D/ColorViewRootUtil(23418): nav bar mode ignore false downX 678 downY 2048 mScreenHeight 2400 mScreenWidth 1080 mStatusBarHeight 54 globalScale 1.125 nav mode 0 rotation 0 event MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=678.0, y[0]=2048.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=12478919, downTime=12478919, deviceId=4, source=0x1002, displayId=0 }
+D/ColorViewRootUtil(23418): nav bar mode ignore false downX 537 downY 1095 mScreenHeight 2400 mScreenWidth 1080 mStatusBarHeight 54 globalScale 1.125 nav mode 0 rotation 0 event MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=537.0, y[0]=1095.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=12480680, downTime=12480680, deviceId=4, source=0x1002, displayId=0 }
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+D/BluetoothAdapter(23418): isLeEnabled(): ON
+E/CheckPermission(23418): _bluetooth code = 10 
+D/BluetoothLeScanner(23418): onScannerRegistered() - status=0 scannerId=8 mScannerId=0
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getInt(Ljava/lang/Object;J)I (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+I/chatty  (23418): uid=10202(com.kommander) identical 4 lines
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+I/flutter (23418): Scanned : B4E5533FE21830AEE9
+I/flutter (23418): Scanned : SDKom_DFU
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+D/BluetoothAdapter(23418): isLeEnabled(): ON
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getInt(Ljava/lang/Object;J)I (greylist, linking, allowed)
+I/flutter (23418): Connecting to E8:7C:6B:E2:58:B1
+I/flutter (23418): 
+E/CheckPermission(23418): _bluetooth code = 10 
+D/BluetoothGatt(23418): connect() - device: E8:7C:6B:E2:58:B1, auto: false
+D/BluetoothGatt(23418): registerApp()
+D/BluetoothGatt(23418): registerApp() - UUID=289de28e-f80d-4b16-b344-4c4791b7e2f6
+D/BluetoothGatt(23418): onClientRegistered() - status=0 clientIf=8
+D/BluetoothGatt(23418): onClientConnectionState() - status=0 clientIf=8 device=E8:7C:6B:E2:58:B1
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getInt(Ljava/lang/Object;J)I (greylist, linking, allowed)
+I/flutter (23418): Connected to E8:7C:6B:E2:58:B1
+I/flutter (23418): 
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+D/BluetoothGatt(23418): discoverServices() - device: E8:7C:6B:E2:58:B1
+D/BluetoothGatt(23418): onConnectionUpdated() - Device=E8:7C:6B:E2:58:B1 interval=12 latency=0 timeout=600 status=0
+D/BluetoothGatt(23418): onSearchComplete() = Device=E8:7C:6B:E2:58:B1 Status=0
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+D/BluetoothGatt(23418): configureMTU() - device: E8:7C:6B:E2:58:B1 mtu: 70
+D/BluetoothGatt(23418): onConfigureMTU() - Device=E8:7C:6B:E2:58:B1 mtu=67 status=0
+I/flutter (23418): DiscoveredService [DiscoveredService(serviceId: 00001800-0000-1000-8000-00805f9b34fb, characteristicIds: [00002a00-0000-1000-8000-00805f9b34fb, 00002a01-0000-1000-8000-00805f9b34fb, 00002a04-0000-1000-8000-00805f9b34fb, 00002aa6-0000-1000-8000-00805f9b34fb], includedServices: []), DiscoveredService(serviceId: 00001801-0000-1000-8000-00805f9b34fb, characteristicIds: [00002a05-0000-1000-8000-00805f9b34fb], includedServices: []), DiscoveredService(serviceId: 0000fe59-0000-1000-8000-00805f9b34fb, characteristicIds: [8ec90002-f315-4f60-9fb8-838830daea50, 8ec90001-f315-4f60-9fb8-838830daea50], includedServices: [])] 
+I/flutter (23418): dfuPCKT found
+I/flutter (23418): dfuCTL found
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+D/BluetoothGatt(23418): setCharacteristicNotification() - uuid: 8ec90001-f315-4f60-9fb8-838830daea50 enable: true
+D/BluetoothGatt(23418): onConnectionUpdated() - Device=E8:7C:6B:E2:58:B1 interval=6 latency=0 timeout=500 status=0
+D/BluetoothGatt(23418): onConnectionUpdated() - Device=E8:7C:6B:E2:58:B1 interval=12 latency=0 timeout=600 status=0
+I/flutter (23418): Configuring DFU...
+I/flutter (23418): Starting DFU...
+I/flutter (23418): Setting object to Command (Op Code = 6, Type = 1)
+I/flutter (23418): Writing [6, 1] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 6, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+I/flutter (23418): Command object info received (Max size = 512, Offset = 0, CRC = 0)
+I/flutter (23418): Creating Init packet object (Op Code = 1, Type = 1, Size = 141)
+I/flutter (23418): Writing [1, 1, 141, 0, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Command object created
+I/flutter (23418): Sending the number of packets before notifications (Op Code = 2, Value = 0
+I/flutter (23418): Writing [2, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 2, 1]
+I/flutter (23418): Packet Receipt Notif disabled (Op Code = 2, Value = 0)
+I/flutter (23418): Writing 141 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 141, 0, 0, 0, 188, 101, 32, 7]
+I/flutter (23418): Checksum received (Offset = 141, CRC = 119563708)
+I/flutter (23418): Length do match: 141 / 141
+I/flutter (23418): Checksum match 119563708 / 119563708
+I/flutter (23418): Executing init packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Sending the number of packets before notifications (Op Code = 2, Value = 0
+I/flutter (23418): Writing [2, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 2, 1]
+I/flutter (23418): Packet Receipt Notif Req (Op Code = 2) sent (Value = 0)
+I/flutter (23418): Setting object to Data (Op Code = 6, Type = 2)
+I/flutter (23418): Writing [6, 2] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 6, 1, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+I/flutter (23418): Command object info received (Max size = 4096, Offset = 0, CRC = 0)
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (1/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (1/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getObject(Ljava/lang/Object;J)Ljava/lang/Object; (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putObject(Ljava/lang/Object;JLjava/lang/Object;)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putLong(Ljava/lang/Object;JJ)V (greylist, linking, allowed)
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->putInt(Ljava/lang/Object;JI)V (greylist, linking, allowed)
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 16, 0, 0, 25, 90, 9, 53]
+I/flutter (23418): Checksum received (Offset = 4096, CRC = 889805337)
+I/flutter (23418): Length do match: 4096 / 4096
+I/flutter (23418): Checksum match 889805337 / 889805337
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (2/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (2/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 32, 0, 0, 45, 53, 142, 205]
+I/flutter (23418): Checksum received (Offset = 8192, CRC = 3448649005)
+I/flutter (23418): Length do match: 8192 / 8192
+I/flutter (23418): Checksum match 3448649005 / 3448649005
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (3/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (3/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 48, 0, 0, 236, 236, 210, 25]
+I/flutter (23418): Checksum received (Offset = 12288, CRC = 433253612)
+I/flutter (23418): Length do match: 12288 / 12288
+I/flutter (23418): Checksum match 433253612 / 433253612
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (4/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (4/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 64, 0, 0, 126, 35, 139, 126]
+I/flutter (23418): Checksum received (Offset = 16384, CRC = 2123047806)
+I/flutter (23418): Length do match: 16384 / 16384
+I/flutter (23418): Checksum match 2123047806 / 2123047806
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (5/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (5/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 80, 0, 0, 30, 236, 59, 242]
+I/flutter (23418): Checksum received (Offset = 20480, CRC = 4064013342)
+I/flutter (23418): Length do match: 20480 / 20480
+I/flutter (23418): Checksum match 4064013342 / 4064013342
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (6/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (6/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 96, 0, 0, 13, 89, 60, 199]
+I/flutter (23418): Checksum received (Offset = 24576, CRC = 3342620941)
+I/flutter (23418): Length do match: 24576 / 24576
+I/flutter (23418): Checksum match 3342620941 / 3342620941
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (7/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (7/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 112, 0, 0, 179, 146, 76, 186]
+I/flutter (23418): Checksum received (Offset = 28672, CRC = 3125580467)
+I/flutter (23418): Length do match: 28672 / 28672
+I/flutter (23418): Checksum match 3125580467 / 3125580467
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (8/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (8/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 128, 0, 0, 168, 195, 141, 48]
+I/flutter (23418): Checksum received (Offset = 32768, CRC = 814597032)
+I/flutter (23418): Length do match: 32768 / 32768
+I/flutter (23418): Checksum match 814597032 / 814597032
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (9/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (9/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 144, 0, 0, 231, 47, 165, 43]
+I/flutter (23418): Checksum received (Offset = 36864, CRC = 732245991)
+I/flutter (23418): Length do match: 36864 / 36864
+I/flutter (23418): Checksum match 732245991 / 732245991
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (10/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (10/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 160, 0, 0, 0, 113, 253, 149]
+I/flutter (23418): Checksum received (Offset = 40960, CRC = 2516414720)
+I/flutter (23418): Length do match: 40960 / 40960
+I/flutter (23418): Checksum match 2516414720 / 2516414720
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (11/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (11/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 176, 0, 0, 221, 193, 184, 49]
+I/flutter (23418): Checksum received (Offset = 45056, CRC = 834191837)
+I/flutter (23418): Length do match: 45056 / 45056
+I/flutter (23418): Checksum match 834191837 / 834191837
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (12/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (12/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 192, 0, 0, 156, 135, 200, 82]
+I/flutter (23418): Checksum received (Offset = 49152, CRC = 1388873628)
+I/flutter (23418): Length do match: 49152 / 49152
+I/flutter (23418): Checksum match 1388873628 / 1388873628
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (13/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (13/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 208, 0, 0, 130, 6, 198, 67]
+I/flutter (23418): Checksum received (Offset = 53248, CRC = 1137051266)
+I/flutter (23418): Length do match: 53248 / 53248
+I/flutter (23418): Checksum match 1137051266 / 1137051266
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (14/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (14/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 224, 0, 0, 192, 166, 195, 101]
+I/flutter (23418): Checksum received (Offset = 57344, CRC = 1707321024)
+I/flutter (23418): Length do match: 57344 / 57344
+I/flutter (23418): Checksum match 1707321024 / 1707321024
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (15/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (15/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 240, 0, 0, 220, 205, 36, 182]
+I/flutter (23418): Checksum received (Offset = 61440, CRC = 3055865308)
+I/flutter (23418): Length do match: 61440 / 61440
+I/flutter (23418): Checksum match 3055865308 / 3055865308
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 4096) (16/17)
+I/flutter (23418): Writing [1, 2, 0, 16, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (16/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 4096 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 0, 0, 1, 0, 85, 249, 104, 91]
+I/flutter (23418): Checksum received (Offset = 65536, CRC = 1533606229)
+I/flutter (23418): Length do match: 65536 / 65536
+I/flutter (23418): Checksum match 1533606229 / 1533606229
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): Creating Data object (Op Code = 1, Type = 2, Size = 3124) (17/17)
+I/flutter (23418): Writing [1, 2, 52, 12, 0, 0] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 1, 1]
+I/flutter (23418): Data object (17/17) created
+I/flutter (23418): Uploading firmware...
+I/flutter (23418): Writing 3124 bytes to 8ec90002-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): Sending Calculate Checksum command (Op Code = 3)
+I/flutter (23418): Writing [3] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 3, 1, 52, 12, 1, 0, 232, 117, 222, 82]
+I/flutter (23418): Checksum received (Offset = 68660, CRC = 1390310888)
+I/flutter (23418): Length do match: 68660 / 68660
+I/flutter (23418): Checksum match 1390310888 / 1390310888
+I/flutter (23418): Executing FW packet (Op Code = 4)
+I/flutter (23418): Writing [4] to 8ec90001-f315-4f60-9fb8-838830daea50 char.
+I/flutter (23418): getResponse start 8000
+I/flutter (23418): RECV 8ec90001-f315-4f60-9fb8-838830daea50 [96, 4, 1]
+I/flutter (23418): DFU ret=0
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getInt(Ljava/lang/Object;J)I (greylist, linking, allowed)
+E/CheckPermission(23418): _bluetooth code = 10 
+D/BluetoothGatt(23418): cancelOpen() - device: E8:7C:6B:E2:58:B1
+D/BluetoothGatt(23418): onClientConnectionState() - status=0 clientIf=8 device=E8:7C:6B:E2:58:B1
+D/BluetoothGatt(23418): setCharacteristicNotification() - uuid: 8ec90001-f315-4f60-9fb8-838830daea50 enable: false
+D/BluetoothGatt(23418): close()
+D/BluetoothGatt(23418): unregisterApp() - mClientIf=8
+W/com.kommander(23418): Accessing hidden method Lsun/misc/Unsafe;->getInt(Ljava/lang/Object;J)I (greylist, linking, allowed)
