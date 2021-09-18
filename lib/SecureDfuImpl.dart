@@ -103,7 +103,7 @@ class SecureDfuImpl {
   Future<int> sendFirmware(Uint8List firmwareFile) async {
 
     // notif every 12 packets
-    int notifs = 12;
+    int notifs = 0; // don't need those
     ObjectResponse status = await retryBlock(3, () => setPacketReceiptNotifications(notifs));
     if (status.success == false) {
       return 1;
