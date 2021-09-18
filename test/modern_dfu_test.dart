@@ -4,10 +4,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:modern_dfu/SecureDfuImpl.dart';
-import 'package:modern_dfu/constants.dart';
-
-import 'package:modern_dfu/utils.dart';
+import '../lib/SecureDfuImpl.dart';
+import '../lib/constants.dart';
+import '../lib/utils.dart';
 
 class FakeCharacteristic implements UserCharacteristic {
 

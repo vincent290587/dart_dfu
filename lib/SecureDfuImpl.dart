@@ -1,10 +1,10 @@
-library modern_dfu;
+library dart_dfu;
 
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
-import 'package:modern_dfu/utils.dart';
 
+import 'utils.dart';
 import 'constants.dart';
 
 ///////////////////////////////////////////////////////////
