@@ -1,5 +1,6 @@
 library dart_dfu;
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -24,7 +25,10 @@ class SecureDfuImpl {
   final UserCharacteristic mPacketCharacteristic;
   final UserCharacteristic mControlPointCharacteristic;
 
-  SecureDfuImpl({required this.mPacketCharacteristic, required this.mControlPointCharacteristic});
+  final StreamController<String>? mController;
+  String currentText = '';
+
+  SecureDfuImpl(this.mController, {required this.mPacketCharacteristic, required this.mControlPointCharacteristic});
 
   Future<int> startDfu(Uint8List initContent, Uint8List fwContent) async {
 
@@ -40,7 +44,21 @@ class SecureDfuImpl {
     return ret;
   }
 
+  void _controllerSet(String text) {
+
+    currentText = text;
+    mController?.add(text);
+  }
+
+  void _controllerAppend(String text) {
+
+    currentText += text;
+    mController?.add(text);
+  }
+
   Future<int> sendInitPacket(Uint8List initContent) async {
+
+    _controllerSet('Sending init packet...');
 
     debugPrint("Setting object to Command (Op Code = 6, Type = 1)");
     ObjectResponse status = await retryBlock(3, () => selectObject(OBJECT_COMMAND));
@@ -99,10 +117,14 @@ class SecureDfuImpl {
 
     }
 
+    _controllerAppend('Init packet success');
+
     return 0;
   }
 
   Future<int> sendFirmware(Uint8List firmwareFile) async {
+
+    _controllerAppend('Sending firmware...');
 
     // notif every 12 packets
     int notifs = 0; // don't need those
@@ -129,7 +151,7 @@ class SecureDfuImpl {
     int nbRetries = 0;
     int curIndex = 0;
     int validatedIndex = 0;
-    while (totBuffer.length > 0 && nbRetries < 6) {
+    while (totBuffer.length > 0) {
 
       await Future.delayed(Duration(milliseconds: 400));
 
@@ -154,6 +176,7 @@ class SecureDfuImpl {
       debugPrint(
           "Creating Data object (Op Code = 1, Type = 2, Size = ${availableObjectSizeInBytes}) (${currentChunk +
               1}/${chunkCount})");
+      _controllerSet('Sending chunk ${availableObjectSizeInBytes}) (${currentChunk + 1}/${chunkCount})');
       status = await retryBlock(3, () => writeCreateRequest(OBJECT_DATA, availableObjectSizeInBytes));
       if (status.success == false) {
         return 3;
@@ -186,6 +209,7 @@ class SecureDfuImpl {
         status = await retryBlock(5, () => writeExecute());
         if (status.success == false) {
           debugPrint("Execution failed");
+          _controllerAppend('Execution failed');
           return 5;
         }
 
@@ -203,16 +227,17 @@ class SecureDfuImpl {
         debugPrint("Length DON'T match: ${checksum.offset} / ${curIndex}");
         debugPrint("Checksum DON'T match ${crc32} / ${checksum.CRC32}");
 
-        await Future.delayed(Duration(milliseconds: 300));
+        if (nbRetries < 6) {
+          _controllerAppend('CRC fail, retrying chunk...');
+          await Future.delayed(Duration(milliseconds: 300));
+        } else {
+          _controllerAppend('Error: out of retries');
+          return 6;
+        }
       }
     }
 
-    // debugPrint("Executing data object (Op Code = 4)");
-    // status = await retryBlock(5, () => writeExecute());
-    // if (status.success == false) {
-    //   debugPrint("Execution failed");
-    //   return 6;
-    // }
+    _controllerAppend('Firmware sent !');
 
     return 0;
   }
@@ -223,7 +248,7 @@ class SecureDfuImpl {
     opCode[1] = type;
     await writeOpCode(mControlPointCharacteristic, opCode);
 
-    List<int> response = await readNotificationResponse(mControlPointCharacteristic); // TODO check char
+    List<int> response = await readNotificationResponse(mControlPointCharacteristic);
     final ObjectResponse status = getStatusCode(response, OP_CODE_SELECT_OBJECT_KEY);
     if (status.success == false) {
       debugPrint("getStatusCode failed");
@@ -264,6 +289,7 @@ class SecureDfuImpl {
       return ObjectResponse(null, success: false);
     }
     if (status.payload == EXTENDED_ERROR) {
+      _controllerAppend('EXTENDED_ERROR ${response.last}');
       debugPrint("Sending the number of packets failed ${response}");
       return ObjectResponse(null, success: false);
     }

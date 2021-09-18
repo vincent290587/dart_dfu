@@ -1,6 +1,6 @@
 name: dart_dfu
 description: Modern nRF DFU package
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/vincent290587/dart_dfu
 
 environment:

@@ -132,6 +132,7 @@ void main() {
     );
 
     SecureDfuImpl dfuImpl = SecureDfuImpl(
+      null,
       mControlPointCharacteristic: controlChar,
       mPacketCharacteristic: packetChar,
     );

@@ -163,6 +163,7 @@ class DfuSupport2 {
 
       debugPrint("Configuring DFU...");
       SecureDfuImpl dfuImpl = SecureDfuImpl(
+        null,
         mControlPointCharacteristic: dfuCTL!,
         mPacketCharacteristic: dfuPCKT!,
       );
