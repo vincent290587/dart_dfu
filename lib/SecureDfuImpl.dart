@@ -180,24 +180,20 @@ class SecureDfuImpl {
         debugPrint("Checksum match ${crc32} / ${checksum.CRC32}");
 
         debugPrint("Executing FW packet (Op Code = 4)");
-        status = await retryBlock(3, () => writeExecute());
-        if (status.success == true) {
-
-          if (totBuffer.length >= info.maxSize) {
-            totBuffer = totBuffer.sublist(info.maxSize);
-          } else {
-            totBuffer = [];
-          }
-          currentChunk++;
-          validatedIndex += buffer.length;
-          nbRetries = 0;
-        } else {
-
-          nbRetries++;
+        status = await retryBlock(5, () => writeExecute());
+        if (status.success == false) {
           debugPrint("Execution failed");
-
-          await Future.delayed(Duration(milliseconds: 300));
+          return 5;
         }
+
+        if (totBuffer.length >= info.maxSize) {
+          totBuffer = totBuffer.sublist(info.maxSize);
+        } else {
+          totBuffer = [];
+        }
+        currentChunk++;
+        validatedIndex += buffer.length;
+        nbRetries = 0;
       } else {
 
         nbRetries++;
@@ -208,7 +204,12 @@ class SecureDfuImpl {
       }
     }
 
-    //await writeExecute();
+    debugPrint("Executing data object (Op Code = 4)");
+    status = await retryBlock(5, () => writeExecute());
+    if (status.success == false) {
+      debugPrint("Execution failed");
+      return 6;
+    }
 
     return 0;
   }
