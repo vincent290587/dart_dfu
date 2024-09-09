@@ -3,8 +3,6 @@ library dart_dfu;
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
-
 import 'utils.dart';
 import 'constants.dart';
 

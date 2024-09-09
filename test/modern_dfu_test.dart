@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+
 import '../lib/SecureDfuImpl.dart';
 import '../lib/constants.dart';
 import '../lib/utils.dart';

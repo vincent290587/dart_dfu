@@ -4,6 +4,10 @@ import 'dart:async';
 import 'SecureDfuImpl.dart';
 import 'package:retry/retry.dart';
 
+void debugPrint(String s) {
+  print(s);
+}
+
 int unsignedBytesToInt(List<int> array, int offset) {
   return (array[offset] & 0xFF) + ((array[offset + 1] & 0xFF) << 8)
       + ((array[offset + 2] & 0xFF) << 16) + ((array[offset + 3] & 0xFF) << 24);
