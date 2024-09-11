@@ -58,7 +58,6 @@ class CRC32 {
   static int compute(var input, [int crc = 0]) {
     if (input == null) throw new ArgumentError.notNull('input');
     //if (input is String) input = UTF8.encode(input);
-    if (crc == null) crc = 0;
 
     crc = crc ^ (0xffffffff);
 

@@ -353,7 +353,7 @@ class SecureDfuImpl {
   }
 
   ObjectResponse getStatusCode(List<int> response, int request) {
-    if (response == null || response.length < 3 || response[0] != OP_CODE_RESPONSE_CODE_KEY || response[1] != request ||
+    if (response.length < 3 || response[0] != OP_CODE_RESPONSE_CODE_KEY || response[1] != request ||
         (response[2] != DFU_STATUS_SUCCESS &&
         response[2] != OP_CODE_NOT_SUPPORTED &&
         response[2] != INVALID_PARAM &&
